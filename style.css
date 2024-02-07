@@ -1,0 +1,10 @@
+ img{
+    width: 100%;
+ }
+ .card{
+           position: relative;
+           left: 40px;
+           background-image: linear-gradient(to right, grey, black );
+           
+
+ }
