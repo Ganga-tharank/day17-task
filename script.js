@@ -1,90 +1,48 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//     var countdownElement = document.getElementById('countdown');
+const url = "https://restcountries.com/v3.1/all";
+const apiKey = "11a1a70f88f93d84c02889beb29c768e"; 
 
+const fetchWeather = (lat, lon) => {
+    const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    return fetch(weatherUrl).then((response) => response.json());
+};
 
-//     function countdown(number, callback){
-//         setTimeout(function() {
-//             if (number > 0){
-//                 countdownElement.textContent = number;
-//                 countdown(number - 1, callback);
-//             }else {
-//                 callback();
-//             }
+const countryContainer = document.getElementById("countryContainer");
 
-//         }, 1000);
-//     }
+const handleWeatherButtonClick = (lat, lon, weatherContainer) => {
+    fetchWeather(lat, lon)
+        .then((weatherInfo) => {
+            weatherContainer.innerHTML = `
+                <p>Temperature: ${weatherInfo.main.temp} &#8451;</p>
+                <p>Weather: ${weatherInfo.weather[0].description}</p>
+            `;
+        })
+        .catch((error) => {
+            console.error("Error fetching weather data", error);
+            weatherContainer.innerHTML = "<p>Error fetching weather data</p>";
+        });
+};
 
-//     countdown(10, function() {
-//         countdownElement.textContent = 'Happy Independence Day!';
-//     });
-// });
+const result = fetch(url);
+result.then((data) => data.json()).then((ele) => {
+    for (let i = 0; i < ele.length; i++) {
+        const card = document.createElement("div");
+        card.className = "col";
+        card.innerHTML = `
+            <div class="card">
+                <div class="card-header">${ele[i].name.common}</div>
+                <img src="${ele[i].flags.png}" class="card-img-top" style="height: 150px;">
+                <div class="card-body">
+                    <h5 class="card-title">Capital: ${ele[i].capital}</h5>
+                    <h5 class="card-title">Region: ${ele[i].region}</h5>
+                    <h5 class="card-title">Sub Region: ${ele[i].subregion}</h5>
+                    <h5 class="card-title">Country Code: ${ele[i].cca2}</h5>
 
-// function timeout(){
-//     document.getElementById("countdown").innerHTML += "Happy Independence Day"
-
-// }
-
-// var age = prompt("Enter your age");
-// var a = new Promise((resolve, reject)=>{
-//     if(age>=18){
-//         resolve("you are eligible");
-//     }else{
-//         reject("you are not eligibli");
-//     }
-// })
-// // console.log(a);
-
-// a.then((data)=>console.log(data)).catch((err)=>console.log(err));
-
-
-
-
-// function chain(num){
-//     return new Promise((resolve, reject)=>resolve(num*2));
-// }
-
-//  chain(5).then((data)=>{
-//     console.log(data);
-//     return chain(data);
-//  }).then((data1)=>{
-//     console.log(data1);
-//     return chain(data1)
-
-//  }).then((data2)=>{
-//     console.log(data2);
-//  })
-
-var res = fetch("https://openWeathermap.org/api");
-res.then((data)=>data.json()).then((data1)=>{
-console.log(data1);
-for (let i = 0; i < data1.length; i++){
-   console.log(data1[i].name);
-   // document.body.append(data1[i].name);
-   function countryName(){
-      var countryName = document.getElementById("countryInput").Value;
-      console.log("Checking weather for " + countryName);
-   }
-   
-   
-}
- 
+                    <h5 class="card-title">LatLng: ${ele[i].latlng}</h5>
+                </div>
+                <button class="btn btn-primary" onclick="handleWeatherButtonClick(${ele[i].latlng[0]}, ${ele[i].latlng[1]}, this.nextElementSibling)">Click for Weather</button>
+                <div class="weather-container"></div>
+            </div>
+        `;
+        countryContainer.appendChild(card);
+    }
 });
-  
-
-function checkWeather(){
-   var countryName = document.getElementById("countryInput").Value;
-   console.log("Checking weather for " + countryName);
-}
-
-// var confirmed = fetch("https://data.covid19india.org/v4/min/data.min.json");
-// confirmed.then((data)=>data.json()).then((data1)=>{
-//    // console.log(data1);
-//    for(var i in data1 ){
-//       console.log(data1[i].total.confirmed);
-//       // document.body.append(data1[i].total.confirmed);
-//    }
-//    // document.body.append(data1[i].total.confirmed);
-
-// })
-
-// document.body.append(data1[i].total.confirmed);
